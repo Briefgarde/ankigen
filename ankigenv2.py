@@ -148,9 +148,12 @@ def genDeck(notes, pics, deckname, outputfolder):
     package.write_to_file(f"{os.path.join(outputfolder, deckname)}.apkg")
     
 if __name__ == "__main__":
-    data = getInfo()
-    if not data:
-        raise Exception("Some info were not provided correctly. Please try again")
-    notes = getNotes(data['pptxloc'])
-    pics = renamePics(getPics(data['picfolder']), data['deckname'])
-    genDeck(notes, pics, deckname=data['deckname'], outputfolder=data['outputfolder'])
+    try:
+        data = getInfo()
+        if not data:
+            raise Exception("Some info were not provided correctly. Please try again")
+        notes = getNotes(data['pptxloc'])
+        pics = renamePics(getPics(data['picfolder']), data['deckname'])
+        genDeck(notes, pics, deckname=data['deckname'], outputfolder=data['outputfolder'])
+    except Exception as e:
+        messagebox.showerror("Error in the process", f"There was an error in the process, {e}, please contact the lazy dev who did this shit program")
