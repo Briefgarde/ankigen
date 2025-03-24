@@ -13,7 +13,7 @@ def getPics():
         print("No folder found for the pictures")
 
     folderPath = os.path.join(os.getcwd(), nameppt)
-    
+
     image_extensions = ('.png', '.jpg', '.jpeg')
     pics = [file for file in os.listdir(folderPath) if file.lower().endswith(image_extensions)]
     # Make sure pics are still in order : 
@@ -47,45 +47,53 @@ def genDeck():
     if len(notes) != len(pics):
         raise Exception("Elements length do not match")
     print("Elements length match")
+
+    for file in os.listdir(os.getcwd()):
+        if file.endswith(".apkg"):
+            os.remove(file)
+
+
     my_model = anki.Model(
-        1607392319,
+        1607392318,
         'Model Leon',
         fields=[
-            {'name' : 'Count'},
+            {'name': 'Count'},
             {'name': 'Note'},
             {'name': 'MyMedia'},                                 
         ],
         templates=[
             {
-            'name': 'Card {{Count}}',
-            'qfmt': '{{Note}}',             
-            'afmt': '{{MyMedia}}',
-            },
-        ])
+                'name': 'Card {{Count}}',
+                'qfmt': '{{MyMedia}}',             
+                'afmt': '{{FrontSide}}<hr id="note">{{Note}}',
+                },
+            ])
     print("Model generé")
 
-
-    cartes = []
-    for i in range(len(notes)):
-        carte = anki.Note(
-            model=my_model,
-            fields=[i, notes[i], pics[i]] # add back 
-        )
-        print(f"Carte {i} générée")
-        cartes.append(carte)
-    
     deck = anki.Deck(
-        1777167684, 
-        'Cartes Leon'
+            1777167684, 
+            'Cartes Leon'
     )
-    deck.add_note(cartes)
+
+    # cartes = []
+    for i in range(len(notes)):
+        picname = os.path.basename(pics[i])
+        media_name = f'<img src="{picname}">'
+        carte = anki.Note(
+                model=my_model,
+                fields=[f"{i}", notes[i], media_name] 
+        )
+        print(f"Carte {i} générée {carte}")
+        deck.add_note(carte)
     print("Deck généré")
 
     package = anki.Package(deck)
     print("Package généré")
+
     package.media_files = pics
     print("Pics given to medial file")
-    package.write_to_file("output.apkg")
+
+    package.write_to_file(f"output.apkg")
     print("Deck crée")
 
 if __name__ == '__main__':
