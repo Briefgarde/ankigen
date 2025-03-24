@@ -22,7 +22,7 @@ def getPics():
     pics = [os.path.join(folderPath, file) for file in pics]# Make sure the elements are the absolute path to pics
 
     return pics
-
+    
 
 def getNotes():
     notes = []
@@ -72,7 +72,7 @@ def genDeck():
 
     deck = anki.Deck(
             1777167684, 
-            'Cartes Leon'
+            'Cartes Leon2'
     )
 
     # cartes = []
