@@ -1,3 +1,5 @@
 *.PNG
 *.apkg
 *.pptx
+/build
+*.spec
