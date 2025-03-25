@@ -8,7 +8,11 @@ This generate a set of basic cards with a specific, basic model. If you'd like t
 
 **Important** : The program scans the PowerPoint for the notes you've taken, but can not extract directly the slides as pictures from the PowerPoint. You'll need to export the PowerPoint as a folder of images (.png/.jpg/.jpeg accepted) first. This can be done by following this [tutorial](https://www.youtube.com/watch?v=Rqf0pYlBUdk). For efficiency, you should probably convert the entire .pptx file to a folder of pictures. 
 
-## Detail
+## Info
 The script uses the [Genanki](https://github.com/kerrickstaley/genanki) library to create the Anki deck, and the [Python-pptx](https://github.com/scanny/python-pptx) library for reading the PowerPoint's notes. 
+
+## Detail
+This was made for a friend with a specific use case in mind, so it may not be as useful as you hope it to be for you specificaly. Still, if you need to quickly generate a deck of cards based around a PowerPoint and its notes, Ankigen should be useful. 
+
 
 
