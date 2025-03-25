@@ -2,4 +2,5 @@
 *.apkg
 *.pptx
 /build
-*.spec
+
+/__pycache__
