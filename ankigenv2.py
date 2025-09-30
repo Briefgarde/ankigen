@@ -16,10 +16,10 @@ def genDeck(notes, pics, deckname, outputfolder):
     for i in range(len(notes)):
         
         picname = os.path.basename(pics[i])
-        media_name = f'<img src="{picname}">'
+        media_name = f'<div style="text-align: center;"><img src="{picname}"></div>'
         carte = anki.Note(
                 model=my_model,
-                fields=[f"{i+1}", notes[i], media_name] 
+                fields=[f"{i+1}", f'<div style="font-size:10px;">{notes[i]}</div>', media_name] 
         )
         deck.add_note(carte)
     

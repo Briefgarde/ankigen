@@ -11,9 +11,20 @@ my_model = anki.Model(
     ],
     templates=[
         {
-            'name': 'Card {{Count}}',
-            'qfmt': 'Card {{Count}}',             
-            'afmt': '{{FrontSide}}<hr>{{Note}}<br>{{MyMedia}}',
+            'name': '{{Count}}',
+            'qfmt': '<p>{{Count}}</p>',             
+            'afmt': '{{FrontSide}}<hr>{{Note}<br>{{MyMedia}}',
             },
-        ]
+        ],
+    css=
+    """
+    p {
+    font-weight: bold;
+    text-align: center;
+    font-size: 20px; 
+    }
+    .red {
+    color : red;
+    }
+    """
     )

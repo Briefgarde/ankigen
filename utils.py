@@ -3,6 +3,7 @@ import os
 import regex as re
 import tkinter as tk
 from tkinter import filedialog, simpledialog, messagebox
+import html
 
 
 def getInfo():
@@ -24,22 +25,9 @@ def getInfo():
         messagebox.showerror("Invalid File", "You must select a .pptx file.")
         return None
     
-    # Ask if user is ok with modifying the names of the files
-    consent_text = (
-        """
-The program will now ask you to locate the folder containing the images from the slides of your powerpoint. If you haven't already, please export all the slide to a picture format (png/jpg) into a single folder
-The name of the slides will be modified so that they include the name of the deck you're creating. 
-Do you agree to that ? 
-        """
-    )
-    consent = messagebox.askyesno("Consent Required", consent_text)
-    if not consent:
-        messagebox.showinfo("Consent Denied", "Operation cancelled due to lack of consent.")
-        raise Exception("The program can not continue if you do not agree to this.")
-    
     # Pics location    
     pic_folder = filedialog.askdirectory(
-        title="Select a folder"
+        title="Select the folder containing the"
     )
     if not pic_folder or not os.path.isdir(pic_folder):
         messagebox.showerror("Invalid Folder", "You must select a valid folder.")
@@ -61,17 +49,92 @@ Do you agree to that ?
     return data
 
 
+def is_bullet_paragraph(para):
+    if not para.text or para.text.strip() == "":
+        return False
+    pPr = para._pPr
+    if pPr is None:
+        return False
+    # Any child tag starting with "a:bu" means a bullet or number
+    for child in pPr.iterchildren():
+        if child.tag.endswith(("buChar", "buAutoNum", "buBlip", "buNone")):
+            return child.tag.endswith(("buChar", "buAutoNum", "buBlip"))
+    return False
+
+
 def getNotes(path):
     notes = []
 
     prs = Presentation(path)
     slides = prs.slides
+    better_arrow = html.unescape("&#x2794;")
+    replacements = {
+        "" : better_arrow
+    }
 
+    
     for slide in slides:
-        if slide.has_notes_slide:
-            notes.append(slide.notes_slide.notes_text_frame.text)
-        else:
+        try:
+            if slide.has_notes_slide:
+                html_parts = []
+                current_level = 0
+
+                for para in slide.notes_slide.notes_text_frame.paragraphs:
+                    # Normal text (non-bullet)
+                    if not is_bullet_paragraph(para):
+                        # Close any open lists
+                        while current_level > 0:
+                            html_parts.append("</ul>")
+                            current_level -= 1
+
+                        # Add plain paragraph
+                        run_texts = []
+                        for run in para.runs:
+                            if run.font.bold:
+                                run_texts.append(f'<span style="color: rgb(255, 0, 0);">{run.text}</span>')
+                            else:
+                                run_texts.append(run.text)
+                        html_parts.append("<p>" + "".join(run_texts) + "</p>")
+                        continue
+
+                    # Bullet paragraph
+                    level = para.level or 0
+
+                    # Open new lists if level increased
+                    while current_level < level + 1:
+                        html_parts.append("<ul>")
+                        current_level += 1
+
+                    # Close lists if level decreased
+                    while current_level > level + 1:
+                        html_parts.append("</ul>")
+                        current_level -= 1
+
+                    # Add the bullet itself
+                    run_texts = []
+                    for run in para.runs:
+                        if run.font.bold:
+                            run_texts.append(f'<span style="color: rgb(255, 0, 0);">{run.text}</span>')
+                        else:
+                            run_texts.append(run.text)
+                    html_parts.append("<li>" + "".join(run_texts) + "</li>")
+
+                # Close any open lists at the end
+                while current_level > 0:
+                    html_parts.append("</ul>")
+                    current_level -= 1
+
+                # Apply replacements
+                text = "".join(html_parts)
+                for k, v in replacements.items():
+                    text = text.replace(k, v)
+
+                notes.append(text.strip())
+            else:
+                notes.append("No notes so far")
+        except Exception:
             notes.append("No notes so far")
+
     return notes
 
 
