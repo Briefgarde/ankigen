@@ -15,16 +15,5 @@ my_model = anki.Model(
             'qfmt': '<p>{{Count}}</p>',             
             'afmt': '{{FrontSide}}<hr>{{Note}<br>{{MyMedia}}',
             },
-        ],
-    css=
-    """
-    p {
-    font-weight: bold;
-    text-align: center;
-    font-size: 20px; 
-    }
-    .red {
-    color : red;
-    }
-    """
+        ]
     )

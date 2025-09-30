@@ -19,7 +19,9 @@ def genDeck(notes, pics, deckname, outputfolder):
         media_name = f'<div style="text-align: center;"><img src="{picname}"></div>'
         carte = anki.Note(
                 model=my_model,
-                fields=[f"{i+1}", f'<div style="font-size:10px;">{notes[i]}</div>', media_name] 
+                fields=[f"<center>{i+1}</center>", 
+                        f'<div style="font-size:10px; font-weight:bold;">{notes[i]}</div>', 
+                        media_name]
         )
         deck.add_note(carte)
     
