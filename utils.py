@@ -90,10 +90,16 @@ def getNotes(path):
                         # Add plain paragraph
                         run_texts = []
                         for run in para.runs:
+                            run_text = run.text
                             if run.font.bold:
-                                run_texts.append(f'<span style="color: rgb(255, 0, 0);">{run.text}</span>')
-                            else:
-                                run_texts.append(run.text)
+                                run_text = f'<span style="color: rgb(255, 0, 0);">{run_text}</span>'
+                                # run_texts.append(f'<span style="color: rgb(255, 0, 0);">{run.text}</span>')
+                            if run.font.italic:
+                                run_text = f'<span style="background-color: rgb(0, 255, 0);">{run_text}</span>'
+                                # run_texts.append(f'<span style="background-color: rgb(0, 255, 0);">{run.text}</span>')
+                            # else:
+                            #     run_texts.append(run.text)
+                            run_texts.append(run_text)
                         html_parts.append("<p>" + "".join(run_texts) + "</p>")
                         continue
 
@@ -113,10 +119,16 @@ def getNotes(path):
                     # Add the bullet itself
                     run_texts = []
                     for run in para.runs:
+                        run_text = run.text
                         if run.font.bold:
-                            run_texts.append(f'<span style="color: rgb(255, 0, 0);">{run.text}</span>')
-                        else:
-                            run_texts.append(run.text)
+                            run_text = f'<span style="color: rgb(255, 0, 0);">{run_text}</span>'
+                            # run_texts.append(f'<span style="color: rgb(255, 0, 0);">{run.text}</span>')
+                        if run.font.italic:
+                            run_text = f'<span style="background-color: rgb(0, 255, 0);">{run_text}</span>'
+                            # run_texts.append(f'<span style="background-color: rgb(0, 255, 0);">{run.text}</span>')
+                        # else:
+                        #     run_texts.append(run.text)
+                        run_texts.append(run_text)
                     html_parts.append("<li>" + "".join(run_texts) + "</li>")
 
                 # Close any open lists at the end
